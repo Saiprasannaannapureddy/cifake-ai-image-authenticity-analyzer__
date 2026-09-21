@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Authenticity Detector</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0; min-height: 100vh; display: grid; place-items: center;
+            font-family: Arial, sans-serif; background: #eef2f7; color: #1f2937;
+        }
+        .card {
+            width: min(92%, 560px); padding: 36px; background: white;
+            border-radius: 18px; box-shadow: 0 10px 30px rgba(0,0,0,.10);
+            text-align: center;
+        }
+        h1 { margin-bottom: 10px; }
+        .subtitle { color: #64748b; line-height: 1.5; }
+        .upload-box {
+            margin: 25px 0; padding: 24px; border: 2px dashed #94a3b8;
+            border-radius: 14px; background: #f8fafc;
+        }
+        input[type=file] { width: 100%; }
+        #preview {
+            display: none; max-width: 100%; max-height: 260px;
+            margin: 20px auto 0; border-radius: 12px;
+        }
+        button {
+            width: 100%; padding: 13px; border: 0; border-radius: 10px;
+            background: #2563eb; color: white; font-size: 16px; cursor: pointer;
+        }
+        button:hover { background: #1d4ed8; }
+        .error {
+            margin: 15px 0; padding: 12px; border-radius: 10px;
+            background: #fee2e2; color: #991b1b;
+        }
+        .note { margin-top: 16px; font-size: 13px; color: #64748b; }
+    </style>
+</head>
+<body>
+<div class="card">
+    <h1>AI Image Authenticity Detector</h1>
+    <p class="subtitle">
+        Upload an image and let the CNN model classify it as real or AI-generated.
+    </p>
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form action="/predict" method="POST" enctype="multipart/form-data">
+        <div class="upload-box">
+            <input type="file" name="image" accept=".jpg,.jpeg,.png,.webp,image/*"
+                   required onchange="previewImage(event)">
+            <img id="preview" alt="Selected image preview">
+        </div>
+        <button type="submit">Analyze Image</button>
+    </form>
+
+    <p class="note">Supported: JPG, JPEG, PNG, WEBP • Maximum size: 5 MB</p>
+</div>
+
+<script>
+function previewImage(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById("preview");
+    if (!file) {
+        preview.style.display = "none";
+        return;
+    }
+    preview.src = URL.createObjectURL(file);
+    preview.style.display = "block";
+}
+</script>
+</body>
+</html>
